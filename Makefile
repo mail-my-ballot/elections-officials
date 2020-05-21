@@ -4,7 +4,7 @@ SHELL := /bin/bash
 export NAME = elections-officials
 
 create-install:
-	python3 -m venv venv
+	python3.7 -m venv venv
 	source venv/bin/activate \
 		&& pip3 install -r requirements.txt \
 		&& ipython kernel install --user --name=$$NAME
