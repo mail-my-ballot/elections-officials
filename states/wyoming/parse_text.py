@@ -1,33 +1,21 @@
 import json
+from collections import defaultdict
 from common import dir_path
 
 # link to data: https://sos.wyo.gov/Elections/Docs/WYCountyClerks_AbsRequest_VRChange.pdf 
-
-def get_county_dict():
-  county = {
-    'local': '',
-    'official': '',
-    'emails': [],
-    'faxes': [],
-    'phones': [],
-    'county': '',
-    'party': ''
-  }
-  return county
-
 
 def generate_county_dict_list(lines):
   counties = []
 
   new_county = True
-  county = get_county_dict()
+  county = defaultdict(list)
   for line in lines:
       line = line.strip(' \n')
       if 'County' in line:
         if not new_county:
           counties.append(county)
           new_county = True
-          county = get_county_dict()
+          county = defaultdict(list)
         county['locale'] = line[:-len(' Clerk')]
         county['county'] = line[:-len(' Clerk')]
         new_county = False
