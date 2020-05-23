@@ -1,6 +1,6 @@
-import parse_text
+import parse_pdf
 
 
 if __name__ == "__main__":
-    parse_text.main()
+    parse_pdf.main()
 
