@@ -3,10 +3,10 @@ from collections import defaultdict
 import PyPDF2
 from tqdm import tqdm
 from common import dir_path
+from common import cache_request
+from io import BytesIO
 import re
 import sys
-import pprint
-
 
 # link to data: https://sos.wyo.gov/Elections/Docs/WYCountyClerks_AbsRequest_VRChange.pdf 
 
@@ -141,7 +141,7 @@ def generate_county_dict_list(formatted_rows):
         phone_number_line = phone_number_line[:phone_number_line.index('or')]
       # Some phone numbers span multiple lines.
       full_phone_number += phone_number_line
-    # Manually add '-' since some phone number span multiple lines.
+    # Manually add '-' since some phone numbers span multiple lines.
     full_phone_number = full_phone_number.replace('.', '')
     full_phone_number = (full_phone_number[:3]
                          + "-"
@@ -160,7 +160,9 @@ def generate_county_dict_list(formatted_rows):
 
 
 def main():
-  with open(dir_path(__file__) + '/results/wyoming_contact.pdf', 'rb') as fh:
+  with BytesIO(cache_request(
+    "https://sos.wyo.gov/Elections/Docs/WYCountyClerks_AbsRequest_VRChange.pdf",
+    binary=True)) as fh:
     pdf_reader = PyPDF2.PdfFileReader(fh)
     text = ''
     for page_num in tqdm(range(pdf_reader.numPages)):
@@ -179,9 +181,6 @@ def main():
   grouped_rows = group_counties(rows)
 
   counties = generate_county_dict_list(grouped_rows)
-
-  with open(dir_path(__file__) + '/results/records.noemail.json', 'w') as fh:
-    json.dump(counties, fh)
 
   with open('public/wyoming.json', 'w') as f:
     json.dump(counties, f)
