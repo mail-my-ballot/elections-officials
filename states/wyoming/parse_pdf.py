@@ -162,7 +162,7 @@ def generate_county_dict_list(formatted_rows):
 def main():
   with BytesIO(cache_request(
     "https://sos.wyo.gov/Elections/Docs/WYCountyClerks_AbsRequest_VRChange.pdf",
-    binary=True)) as fh:
+    is_binary=True)) as fh:
     pdf_reader = PyPDF2.PdfFileReader(fh)
     text = ''
     for page_num in tqdm(range(pdf_reader.numPages)):
