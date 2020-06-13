@@ -10,10 +10,10 @@ def fetch_data():
   raw_rows = soup.body.find_all('tr')[1:]
 
   counties = []
-  for tr in raw_rows:
+  for table_rows in raw_rows:
     county = {}
 
-    items = tr.find_all('font')
+    items = table_rows.find_all('font')
 
     county['county'] = items[0].text + ' County'
     county['locale'] = county['county']
